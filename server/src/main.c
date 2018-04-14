@@ -18,11 +18,7 @@ int main(void)
     struct sockaddr_in sock_in;
     sock_in.sin_family = AF_INET;
     sock_in.sin_port = htons("5000");
-    if(inet_pton(AF_INET, "0.0.0.0", &sock_in.sin_addr) != 1)
-    {
-        perror("Error on converting IP address");
-        exit(-1);
-    }
+    sock_in.sin_addr.s_addr = INADDR_ANY;
     if(bind(sockfd, (struct sockaddr *) &sock_in, sizeof(sock_in)) < 0)
     {
         perror("Error on binding to socket");
