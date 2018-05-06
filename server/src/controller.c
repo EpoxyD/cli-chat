@@ -11,6 +11,8 @@ void controller_init()
     fprintf(stdout, "Created socket %d\n", socket);
     error = connection_bind_socket(socket);
     fprintf(stdout, "Bind socket %d. Status %d\n", socket, error);
+    error = connection_listen_socket(socket);
+    fprintf(stdout, "Listen on socket %d. Status %d\n", socket, error);
 }
 
 void controller_run()

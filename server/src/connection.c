@@ -48,3 +48,17 @@ int connection_bind_socket(int socket)
 
     return 0;
 }
+
+int connection_listen_socket(int socket)
+{
+    int error;
+
+    error = listen(socket, 10);
+    if(error < 0)
+    {
+        perror("Error listening on socket");
+        return error;
+    }
+
+    return 0;
+}
