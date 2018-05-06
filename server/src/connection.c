@@ -1,9 +1,19 @@
+#include <arpa/inet.h>
+#include <netinet/in.h>
 #include <stdio.h>
 #include <string.h>
 #include <sys/socket.h>
 #include <sys/types.h>
 
 #include "connection.h"
+
+#ifndef WANIP
+#define WANIP "127.0.0.1"
+#endif
+
+#ifndef PORT
+#define PORT 5000
+#endif
 
 int connection_create_socket(int domain, int type)
 {
@@ -17,4 +27,24 @@ int connection_create_socket(int domain, int type)
     }
 
     return sock;
+}
+
+int connection_bind_socket(int socket)
+{
+    int error;
+    struct sockaddr_in inaddr;
+
+    memset(&inaddr, 0, sizeof(struct sockaddr_in));
+    inaddr.sin_family   = AF_INET;
+    inaddr.sin_port     = htons(PORT);
+    inet_aton(WANIP, &inaddr.sin_addr);
+
+    error = bind(socket, (const struct sockaddr*) &inaddr, sizeof(inaddr));
+    if(error < 0)
+    {
+        perror("Error binding on socket");
+        return error;
+    }
+
+    return 0;
 }
