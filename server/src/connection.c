@@ -5,6 +5,7 @@
 #include <string.h>
 #include <sys/socket.h>
 #include <sys/types.h>
+#include <unistd.h>
 
 #include "connection.h"
 
@@ -66,21 +67,20 @@ int connection_listen_socket(int socket)
 
 int connection_accept_socket(int socket)
 {
-	int error;
-	int addrlen;
-	struct sockaddr_in addr;
+    int new_fd, size;
+    struct sockaddr_in inaddr;
 
-	addrlen = sizeof(struct sockaddr_in);
-	memset(&addr, 0, addrlen);
+    memset(&inaddr, 0, sizeof(inaddr));
+    size = sizeof(inaddr);
+    
+    new_fd = accept(socket, (struct sockaddr*) &inaddr, (socklen_t*) &size);
+    if(new_fd < 0)
+    {
+        perror("Error accepting connection on socket");
+        return new_fd;
+    }
 
-	error = accept(socket, (struct sockaddr *) &addr, (socklen_t *) &addrlen);
-	if(error < 0)
-	{
-		perror("Error accepting on socket");
-		return error;
-	}
+    fprintf(stdout, "Server: connect from host %s, port %hd.\n", inet_ntoa (inaddr.sin_addr), ntohs (inaddr.sin_port));
 
-	return 0;
-
+    return new_fd;
 }
-
