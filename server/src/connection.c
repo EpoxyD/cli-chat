@@ -5,6 +5,7 @@
 #include <string.h>
 #include <sys/socket.h>
 #include <sys/types.h>
+#include <unistd.h>
 
 #include "connection.h"
 
@@ -66,21 +67,19 @@ int connection_listen_socket(int socket)
 
 int connection_accept_socket(int socket)
 {
-	int error;
+	int new_fd;
 	int addrlen;
 	struct sockaddr_in addr;
 
 	addrlen = sizeof(struct sockaddr_in);
 	memset(&addr, 0, addrlen);
 
-	error = accept(socket, (struct sockaddr *) &addr, (socklen_t *) &addrlen);
-	if(error < 0)
+	new_fd = accept(socket, (struct sockaddr *) &addr, (socklen_t *) &addrlen);
+	if(new_fd < 0)
 	{
 		perror("Error accepting on socket");
-		return error;
+		return new_fd
 	}
 
-	return 0;
-
+	return new_fd;
 }
-
