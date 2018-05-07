@@ -11,6 +11,9 @@ static int epoll_fd;
 static int main_socket;
 static bool alive;
 
+static int epoll_fd;
+static int main_socket;
+
 void controller_init()
 {
     main_socket = connection_create_socket(AF_INET, SOCK_STREAM);
@@ -19,16 +22,23 @@ void controller_init()
     fprintf(stdout, "Bind   on socket %d. Status %d\n", main_socket, error);
     error = connection_listen_socket(main_socket);
     fprintf(stdout, "Listen on socket %d. Status %d\n", main_socket, error);
+<<<<<<< HEAD
 
     epoll_fd = eventloop_create_fd();
     fprintf(stdout, "Created       eventloop %d\n", epoll_fd);
     error = eventloop_add_event(epoll_fd, main_socket);
     fprintf(stdout, "Added fd %d to eventloop %d. Status %d\n", main_socket,
             epoll_fd, error);
+=======
+    
+    epoll_fd = eventloop_create_fd();
+    fprintf(stdout, "Created       eventloop %d\n", epoll_fd);
+>>>>>>> Add events to eventloop
 }
 
 void controller_run()
 {
+<<<<<<< HEAD
     alive = true;
     while (alive)
     {
@@ -40,6 +50,10 @@ void controller_stop()
 {
     alive = false;
     return;
+=======
+    int error = eventloop_add_event(epoll_fd, main_socket);
+    fprintf(stdout, "Added fd %d to eventloop %d. Status %d\n", main_socket, epoll_fd, error);
+>>>>>>> Add events to eventloop
 }
 
 void controller_cleanup()
