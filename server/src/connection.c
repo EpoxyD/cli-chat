@@ -80,7 +80,5 @@ int connection_accept_socket(int socket)
         return new_fd;
     }
 
-    fprintf(stdout, "Server: connect from host %s, port %hd.\n", inet_ntoa(inaddr.sin_addr), ntohs(inaddr.sin_port));
-
     return new_fd;
 }

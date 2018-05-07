@@ -6,13 +6,17 @@
 #include <stdio.h>
 #include <sys/socket.h>
 #include <unistd.h>
+<<<<<<< HEAD
 
 static int epoll_fd;
 static int main_socket;
 static bool alive;
+=======
+>>>>>>> Introduce while loop in run + formatting to Clang Format
 
 static int epoll_fd;
 static int main_socket;
+static bool alive;
 
 void controller_init()
 {
@@ -22,6 +26,7 @@ void controller_init()
     fprintf(stdout, "Bind   on socket %d. Status %d\n", main_socket, error);
     error = connection_listen_socket(main_socket);
     fprintf(stdout, "Listen on socket %d. Status %d\n", main_socket, error);
+<<<<<<< HEAD
 <<<<<<< HEAD
 
     epoll_fd = eventloop_create_fd();
@@ -34,11 +39,22 @@ void controller_init()
     epoll_fd = eventloop_create_fd();
     fprintf(stdout, "Created       eventloop %d\n", epoll_fd);
 >>>>>>> Add events to eventloop
+=======
+
+    epoll_fd = eventloop_create_fd();
+    fprintf(stdout, "Created       eventloop %d\n", epoll_fd);
+    error = eventloop_add_event(epoll_fd, main_socket);
+    fprintf(stdout, "Added fd %d to eventloop %d. Status %d\n", main_socket,
+            epoll_fd, error);
+>>>>>>> Introduce while loop in run + formatting to Clang Format
 }
 
 void controller_run()
 {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> Introduce while loop in run + formatting to Clang Format
     alive = true;
     while (alive)
     {
@@ -50,10 +66,13 @@ void controller_stop()
 {
     alive = false;
     return;
+<<<<<<< HEAD
 =======
     int error = eventloop_add_event(epoll_fd, main_socket);
     fprintf(stdout, "Added fd %d to eventloop %d. Status %d\n", main_socket, epoll_fd, error);
 >>>>>>> Add events to eventloop
+=======
+>>>>>>> Introduce while loop in run + formatting to Clang Format
 }
 
 void controller_cleanup()
