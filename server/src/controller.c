@@ -2,11 +2,14 @@
 #include "connection.h"
 #include "eventloop.h"
 
+#include <stdbool.h>
 #include <stdio.h>
 #include <sys/socket.h>
+#include <unistd.h>
 
 static int epoll_fd;
 static int main_socket;
+static bool alive;
 
 void controller_init()
 {
@@ -16,15 +19,27 @@ void controller_init()
     fprintf(stdout, "Bind   on socket %d. Status %d\n", main_socket, error);
     error = connection_listen_socket(main_socket);
     fprintf(stdout, "Listen on socket %d. Status %d\n", main_socket, error);
-    
+
     epoll_fd = eventloop_create_fd();
     fprintf(stdout, "Created       eventloop %d\n", epoll_fd);
+    error = eventloop_add_event(epoll_fd, main_socket);
+    fprintf(stdout, "Added fd %d to eventloop %d. Status %d\n", main_socket,
+            epoll_fd, error);
 }
 
 void controller_run()
 {
-    int error = eventloop_add_event(epoll_fd, main_socket);
-    fprintf(stdout, "Added fd %d to eventloop %d. Status %d\n", main_socket, epoll_fd, error);
+    alive = true;
+    while (alive)
+    {
+        sleep(1);
+    }
+}
+
+void controller_stop()
+{
+    alive = false;
+    return;
 }
 
 void controller_cleanup()

@@ -37,12 +37,12 @@ int connection_bind_socket(int socket)
     struct sockaddr_in inaddr;
 
     memset(&inaddr, 0, sizeof(struct sockaddr_in));
-    inaddr.sin_family   = AF_INET;
-    inaddr.sin_port     = htons(PORT);
+    inaddr.sin_family = AF_INET;
+    inaddr.sin_port = htons(PORT);
     inet_aton(WANIP, &inaddr.sin_addr);
 
-    error = bind(socket, (const struct sockaddr*) &inaddr, sizeof(inaddr));
-    if(error < 0)
+    error = bind(socket, (const struct sockaddr *)&inaddr, sizeof(inaddr));
+    if (error < 0)
     {
         perror("Error binding on socket");
         return error;
@@ -56,7 +56,7 @@ int connection_listen_socket(int socket)
     int error;
 
     error = listen(socket, 10);
-    if(error < 0)
+    if (error < 0)
     {
         perror("Error listening on socket");
         return error;
@@ -72,15 +72,15 @@ int connection_accept_socket(int socket)
 
     memset(&inaddr, 0, sizeof(inaddr));
     size = sizeof(inaddr);
-    
-    new_fd = accept(socket, (struct sockaddr*) &inaddr, (socklen_t*) &size);
-    if(new_fd < 0)
+
+    new_fd = accept(socket, (struct sockaddr *)&inaddr, (socklen_t *)&size);
+    if (new_fd < 0)
     {
         perror("Error accepting connection on socket");
         return new_fd;
     }
 
-    fprintf(stdout, "Server: connect from host %s, port %hd.\n", inet_ntoa (inaddr.sin_addr), ntohs (inaddr.sin_port));
+    fprintf(stdout, "Server: connect from host %s, port %hd.\n", inet_ntoa(inaddr.sin_addr), ntohs(inaddr.sin_port));
 
     return new_fd;
 }
