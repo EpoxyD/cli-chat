@@ -37,12 +37,12 @@ int connection_bind_socket(int socket)
     struct sockaddr_in inaddr;
 
     memset(&inaddr, 0, sizeof(struct sockaddr_in));
-    inaddr.sin_family   = AF_INET;
-    inaddr.sin_port     = htons(PORT);
+    inaddr.sin_family = AF_INET;
+    inaddr.sin_port = htons(PORT);
     inet_aton(WANIP, &inaddr.sin_addr);
 
-    error = bind(socket, (const struct sockaddr*) &inaddr, sizeof(inaddr));
-    if(error < 0)
+    error = bind(socket, (const struct sockaddr *)&inaddr, sizeof(inaddr));
+    if (error < 0)
     {
         perror("Error binding on socket");
         return error;
@@ -56,7 +56,7 @@ int connection_listen_socket(int socket)
     int error;
 
     error = listen(socket, 10);
-    if(error < 0)
+    if (error < 0)
     {
         perror("Error listening on socket");
         return error;
@@ -78,7 +78,7 @@ int connection_accept_socket(int socket)
 	if(new_fd < 0)
 	{
 		perror("Error accepting on socket");
-		return new_fd
+		return new_fd;
 	}
 
 	return new_fd;
