@@ -1,4 +1,5 @@
 #pragma once
 
-int eventloop_create();
-int eventloop_close(int polling_fd);
+int eventloop_create_fd();
+int eventloop_add_event(int epoll_fd, int socket_fd);
+int eventloop_close(int epoll_fd);
