@@ -63,3 +63,24 @@ int connection_listen_socket(int socket)
 
     return 0;
 }
+
+int connection_accept_socket(int socket)
+{
+	int error;
+	int addrlen;
+	struct sockaddr_in addr;
+
+	addrlen = sizeof(struct sockaddr_in);
+	memset(&addr, 0, addrlen);
+
+	error = accept(socket, (struct sockaddr *) &addr, (socklen_t *) &addrlen);
+	if(error < 0)
+	{
+		perror("Error accepting on socket");
+		return error;
+	}
+
+	return 0;
+
+}
+
