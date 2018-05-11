@@ -19,47 +19,32 @@ void controller_init()
     fprintf(stdout, "Bind   on socket %d. Status %d\n", main_socket, error);
     error = connection_listen_socket(main_socket);
     fprintf(stdout, "Listen on socket %d. Status %d\n", main_socket, error);
-<<<<<<< HEAD
-<<<<<<< HEAD
 
     epoll_fd = eventloop_create_fd();
     fprintf(stdout, "Created       eventloop %d\n", epoll_fd);
     error = eventloop_add_event(epoll_fd, main_socket);
-    fprintf(stdout, "Added fd %d to eventloop %d. Status %d\n", main_socket,
-            epoll_fd, error);
-=======
-    
-    epoll_fd = eventloop_create_fd();
-    fprintf(stdout, "Created       eventloop %d\n", epoll_fd);
->>>>>>> Add events to eventloop
-=======
-
-    epoll_fd = eventloop_create_fd();
-    fprintf(stdout, "Created       eventloop %d\n", epoll_fd);
-    error = eventloop_add_event(epoll_fd, main_socket);
-<<<<<<< HEAD
-    fprintf(stdout, "Added fd %d to eventloop %d. Status %d\n", main_socket,
-            epoll_fd, error);
->>>>>>> Introduce while loop in run + formatting to Clang Format
-=======
     fprintf(stdout, "Added fd %d to eventloop %d. Status %d\n", main_socket, epoll_fd, error);
->>>>>>> Add eventloop_wait
 }
 
 void controller_run()
 {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> Introduce while loop in run + formatting to Clang Format
     alive = true;
-=======
+    int loop, new_socket, nr_of_fd;
+    struct epoll_event *events;
 
->>>>>>> Add eventloop_wait
     while (alive)
     {
-        eventloop_wait(epoll_fd);
+        nr_of_fd = eventloop_wait(epoll_fd, events);
+
+        for (loop = 0; loop < nr_of_fd; ++loop)
+        {
+            if ((&events)[loop].data.fd == epoll_fd)
+            {
+                new_socket = connection_accept_socket(epoll_fd);
+                eventloop_add_event(epoll_fd, new_socket);
+            }
+        }
+
         fprintf(stdout, "I'm in a loop\n");
     }
 }
@@ -68,13 +53,8 @@ void controller_stop()
 {
     alive = false;
     return;
-<<<<<<< HEAD
-=======
     int error = eventloop_add_event(epoll_fd, main_socket);
     fprintf(stdout, "Added fd %d to eventloop %d. Status %d\n", main_socket, epoll_fd, error);
->>>>>>> Add events to eventloop
-=======
->>>>>>> Introduce while loop in run + formatting to Clang Format
 }
 
 void controller_cleanup()
