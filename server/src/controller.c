@@ -28,10 +28,22 @@ void controller_init()
 
 void controller_run()
 {
+    int loop, new_socket, nr_of_fd;
+    struct epoll_event *events;
 
     while (alive)
     {
-        eventloop_wait(epoll_fd);
+        nr_of_fd = eventloop_wait(epoll_fd, events);
+
+        for (loop = 0; loop < nr_of_fd; ++loop)
+        {
+            if (events[loop].data.fd == epoll_fd)
+            {
+                new_socket = connection_accept_socket(epoll_fd);
+                eventloop_add_event(epoll_fd, new_socket);
+            }
+        }
+
         fprintf(stdout, "I'm in a loop\n");
     }
 }
