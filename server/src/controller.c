@@ -6,17 +6,10 @@
 #include <stdio.h>
 #include <sys/socket.h>
 #include <unistd.h>
-<<<<<<< HEAD
 
 static int epoll_fd;
 static int main_socket;
-static bool alive;
-=======
->>>>>>> Introduce while loop in run + formatting to Clang Format
-
-static int epoll_fd;
-static int main_socket;
-static bool alive;
+static bool alive = true;
 
 void controller_init()
 {
@@ -44,21 +37,30 @@ void controller_init()
     epoll_fd = eventloop_create_fd();
     fprintf(stdout, "Created       eventloop %d\n", epoll_fd);
     error = eventloop_add_event(epoll_fd, main_socket);
+<<<<<<< HEAD
     fprintf(stdout, "Added fd %d to eventloop %d. Status %d\n", main_socket,
             epoll_fd, error);
 >>>>>>> Introduce while loop in run + formatting to Clang Format
+=======
+    fprintf(stdout, "Added fd %d to eventloop %d. Status %d\n", main_socket, epoll_fd, error);
+>>>>>>> Add eventloop_wait
 }
 
 void controller_run()
 {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> Introduce while loop in run + formatting to Clang Format
     alive = true;
+=======
+
+>>>>>>> Add eventloop_wait
     while (alive)
     {
-        sleep(1);
+        eventloop_wait(epoll_fd);
+        fprintf(stdout, "I'm in a loop\n");
     }
 }
 
