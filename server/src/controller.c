@@ -9,7 +9,7 @@
 
 static int epoll_fd;
 static int main_socket;
-static bool alive;
+static bool alive = true;
 
 void controller_init()
 {
@@ -23,16 +23,16 @@ void controller_init()
     epoll_fd = eventloop_create_fd();
     fprintf(stdout, "Created       eventloop %d\n", epoll_fd);
     error = eventloop_add_event(epoll_fd, main_socket);
-    fprintf(stdout, "Added fd %d to eventloop %d. Status %d\n", main_socket,
-            epoll_fd, error);
+    fprintf(stdout, "Added fd %d to eventloop %d. Status %d\n", main_socket, epoll_fd, error);
 }
 
 void controller_run()
 {
-    alive = true;
+
     while (alive)
     {
-        sleep(1);
+        eventloop_wait(epoll_fd);
+        fprintf(stdout, "I'm in a loop\n");
     }
 }
 
