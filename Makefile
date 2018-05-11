@@ -12,3 +12,4 @@ clean :
 	$(MAKE) -C server clean
 
 .PHONY : clean $(SUBDIRS)
+
