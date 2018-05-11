@@ -26,3 +26,4 @@ $(OBJ_FOLDER)/%.o : $(SRC_FOLDER)/%.c $(HEADERS)
 .PHONY : clean
 clean :
 	rm -rf $(BIN_FOLDER) $(OBJ_FOLDER)
+
