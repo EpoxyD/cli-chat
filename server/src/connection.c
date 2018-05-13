@@ -2,6 +2,7 @@
 #include <errno.h>
 #include <netinet/in.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <sys/socket.h>
 #include <sys/types.h>
@@ -25,7 +26,7 @@ int connection_create_socket(int domain, int type)
     if (sock < 0)
     {
         perror("Error creating socket");
-        return sock;
+        exit(-1);
     }
 
     return sock;
@@ -45,7 +46,7 @@ int connection_bind_socket(int socket)
     if (error < 0)
     {
         perror("Error binding on socket");
-        return error;
+        exit(-1);
     }
 
     return 0;
@@ -59,7 +60,7 @@ int connection_listen_socket(int socket)
     if (error < 0)
     {
         perror("Error listening on socket");
-        return error;
+        exit(-1);
     }
 
     return 0;
@@ -77,7 +78,7 @@ int connection_accept_socket(int socket)
     if (new_fd < 0)
     {
         perror("Error accepting connection on socket");
-        return new_fd;
+        exit(-1);
     }
 
     return new_fd;

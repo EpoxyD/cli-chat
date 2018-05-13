@@ -4,6 +4,7 @@
 
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <sys/socket.h>
 #include <unistd.h>
 
@@ -14,34 +15,47 @@ static bool alive = true;
 void controller_init()
 {
     main_socket = connection_create_socket(AF_INET, SOCK_STREAM);
-    fprintf(stdout, "Created   socket %d\n", main_socket);
-    int error = connection_bind_socket(main_socket);
-    fprintf(stdout, "Bind   on socket %d. Status %d\n", main_socket, error);
-    error = connection_listen_socket(main_socket);
-    fprintf(stdout, "Listen on socket %d. Status %d\n", main_socket, error);
+    connection_bind_socket(main_socket);
+    connection_listen_socket(main_socket);
 
     epoll_fd = eventloop_create_fd();
-    fprintf(stdout, "Created       eventloop %d\n", epoll_fd);
-    error = eventloop_add_event(epoll_fd, main_socket);
-    fprintf(stdout, "Added fd %d to eventloop %d. Status %d\n", main_socket, epoll_fd, error);
+    eventloop_add_event(epoll_fd, main_socket);
 }
 
 void controller_run()
 {
     alive = true;
     int loop, new_socket, nr_of_fd;
-    struct epoll_event *events;
+    struct epoll_event events;
 
     while (alive)
     {
-        nr_of_fd = eventloop_wait(epoll_fd, events);
+        nr_of_fd = eventloop_wait(epoll_fd, &events);
 
         for (loop = 0; loop < nr_of_fd; ++loop)
         {
-            if ((&events)[loop].data.fd == epoll_fd)
+            fprintf(stdout, "[Events] events  = %d\n", events.events);
+            fprintf(stdout, "[Events] data.fd = %d\n", events.data.fd);
+
+            if(events.data.fd == main_socket)
             {
-                new_socket = connection_accept_socket(epoll_fd);
+                new_socket = connection_accept_socket(main_socket);
                 eventloop_add_event(epoll_fd, new_socket);
+            }
+            else
+            {
+                char buffer[10];
+                int error = read(events.data.fd, buffer, 10);
+                if(error < 0)
+                {
+                    perror("Error reading data\n");
+                    exit(-1);
+                }
+                if(error < 10)
+                {
+                    buffer[error] = '\0';
+                }
+                fprintf(stdout, "[Buffer] %s\n", buffer);
             }
         }
 
