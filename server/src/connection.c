@@ -67,20 +67,19 @@ int connection_listen_socket(int socket)
 
 int connection_accept_socket(int socket)
 {
-    int new_fd, size;
-    struct sockaddr_in inaddr;
+	int new_fd;
+	int addrlen;
+	struct sockaddr_in addr;
 
-    memset(&inaddr, 0, sizeof(inaddr));
-    size = sizeof(inaddr);
+	addrlen = sizeof(struct sockaddr_in);
+	memset(&addr, 0, addrlen);
 
-    new_fd = accept(socket, (struct sockaddr *)&inaddr, (socklen_t *)&size);
-    if (new_fd < 0)
-    {
-        perror("Error accepting connection on socket");
-        return new_fd;
-    }
+	new_fd = accept(socket, (struct sockaddr *) &addr, (socklen_t *) &addrlen);
+	if(new_fd < 0)
+	{
+		perror("Error accepting on socket");
+		return new_fd;
+	}
 
-    fprintf(stdout, "Server: connect from host %s, port %hd.\n", inet_ntoa(inaddr.sin_addr), ntohs(inaddr.sin_port));
-
-    return new_fd;
+	return new_fd;
 }

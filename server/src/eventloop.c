@@ -1,9 +1,11 @@
 #include <errno.h>
 #include <stdio.h>
-#include <sys/epoll.h>
+#include <string.h>
 #include <unistd.h>
 
 #include "eventloop.h"
+
+static int max_events;
 
 int eventloop_create_fd()
 {
@@ -22,6 +24,9 @@ int eventloop_create_fd()
 int eventloop_add_event(int epoll_fd, int socket_fd)
 {
     struct epoll_event event;
+
+    memset(&event, 0, sizeof(struct epoll_event));
+
     event.events = EPOLLIN;
     event.data.fd = socket_fd;
 
@@ -31,7 +36,23 @@ int eventloop_add_event(int epoll_fd, int socket_fd)
         return -1;
     }
 
+    max_events++;
+
     return 0;
+}
+
+int eventloop_wait(int epoll_fd, struct epoll_event *events)
+{
+    int nr_of_fd;
+
+    nr_of_fd = epoll_wait(epoll_fd, events, max_events, 1000);
+    if (nr_of_fd < 0)
+    {
+        perror("Error closing polling file descriptor");
+        return nr_of_fd;
+    }
+
+    return nr_of_fd;
 }
 
 int eventloop_close(int epoll_fd)

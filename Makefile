@@ -1,10 +1,8 @@
 SUBDIRS := client server
 
 all : $(SUBDIRS)
-	@echo DEBUG $(SUBDIRS)
 
 $(SUBDIRS) : 
-	@echo DEBUG $@
 	$(MAKE) -C $@
 
 clean : 
@@ -12,3 +10,4 @@ clean :
 	$(MAKE) -C server clean
 
 .PHONY : clean $(SUBDIRS)
+
