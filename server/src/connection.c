@@ -2,6 +2,7 @@
 #include <errno.h>
 #include <netinet/in.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <sys/socket.h>
 #include <sys/types.h>
@@ -25,7 +26,7 @@ int connection_create_socket(int domain, int type)
     if (sock < 0)
     {
         perror("Error creating socket");
-        return sock;
+        exit(-1);
     }
 
     return sock;
@@ -45,7 +46,7 @@ int connection_bind_socket(int socket)
     if (error < 0)
     {
         perror("Error binding on socket");
-        return error;
+        exit(-1);
     }
 
     return 0;
@@ -59,7 +60,7 @@ int connection_listen_socket(int socket)
     if (error < 0)
     {
         perror("Error listening on socket");
-        return error;
+        exit(-1);
     }
 
     return 0;
@@ -67,19 +68,18 @@ int connection_listen_socket(int socket)
 
 int connection_accept_socket(int socket)
 {
-	int new_fd;
-	int addrlen;
-	struct sockaddr_in addr;
+    int new_fd, size;
+    struct sockaddr_in inaddr;
 
-	addrlen = sizeof(struct sockaddr_in);
-	memset(&addr, 0, addrlen);
+    memset(&inaddr, 0, sizeof(inaddr));
+    size = sizeof(inaddr);
 
-	new_fd = accept(socket, (struct sockaddr *) &addr, (socklen_t *) &addrlen);
-	if(new_fd < 0)
-	{
-		perror("Error accepting on socket");
-		return new_fd;
-	}
+    new_fd = accept(socket, (struct sockaddr *)&inaddr, (socklen_t *)&size);
+    if (new_fd < 0)
+    {
+        perror("Error accepting connection on socket");
+        exit(-1);
+    }
 
-	return new_fd;
+    return new_fd;
 }
