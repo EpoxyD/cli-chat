@@ -7,9 +7,9 @@ SOURCES = $(wildcard $(SRC_FOLDER)/*.c)
 HEADERS = $(wildcard $(INC_FOLDER)/*.h)
  
 OBJECTS = $(SOURCES:$(SRC_FOLDER)/%.c=$(OBJ_FOLDER)/%.o)
-PROGRAM = $(shell basename `pwd`)
+PROGRAM = server
  
-CC := $(shell which gcc)
+CC := gcc
 CFLAGS = -Wall -W -O -I inc
 LIBS =
 LDFLAGS = $(LIBS:%=-l%)
