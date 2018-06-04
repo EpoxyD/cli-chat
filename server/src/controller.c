@@ -51,7 +51,11 @@ void controller_run()
                     perror("Error reading data\n");
                     exit(-1);
                 }
-                if(error < 10)
+                else if(error == 0)
+                {
+                    close(events.data.fd);
+                }
+                else if(error < 10)
                 {
                     buffer[error] = '\0';
                 }
