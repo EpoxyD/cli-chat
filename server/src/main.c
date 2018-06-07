@@ -5,6 +5,7 @@
 
 void stop_program()
 {
+    controller_cleanup();
     controller_stop();
     return;
 }
@@ -15,5 +16,4 @@ int main(void)
 
     controller_init();
     controller_run();
-    controller_cleanup();
 }

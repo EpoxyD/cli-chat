@@ -57,8 +57,6 @@ int eventloop_wait(int epoll_fd, struct epoll_event *events)
         exit(-1);
     }
 
-    fprintf(stdout, "Number of FD's fired: %d\n", nr_of_fd);
-
     return nr_of_fd;
 }
 

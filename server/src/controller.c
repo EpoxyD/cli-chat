@@ -8,9 +8,23 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
+#define READ_BUFFER_SIZE 256
+
 static int epoll_fd;
 static int main_socket;
 static bool alive = true;
+
+static ssize_t read_data(int fd, void *buffer, size_t n_bytes)
+{
+    ssize_t bytes;
+    bytes = read(fd, buffer, n_bytes);
+    if (bytes < 0)
+    {
+        perror("Error reading data\n");
+        exit(-1);
+    }
+    return bytes;
+}
 
 void controller_init()
 {
@@ -37,33 +51,25 @@ void controller_run()
             fprintf(stdout, "[Events] events  = %d\n", events.events);
             fprintf(stdout, "[Events] data.fd = %d\n", events.data.fd);
 
-            if(events.data.fd == main_socket)
+            if (events.data.fd == main_socket)
             {
                 new_socket = connection_accept_socket(main_socket);
                 eventloop_add_event(epoll_fd, new_socket);
             }
             else
             {
-                char buffer[10];
-                int error = read(events.data.fd, buffer, 10);
-                if(error < 0)
-                {
-                    perror("Error reading data\n");
-                    exit(-1);
-                }
-                else if(error == 0)
+                char buffer[READ_BUFFER_SIZE] = {'\0'};
+                int bytes_read = read_data(events.data.fd, buffer, READ_BUFFER_SIZE);
+                if (bytes_read == 0)
                 {
                     close(events.data.fd);
                 }
-                else if(error < 10)
+                else
                 {
-                    buffer[error] = '\0';
+                    fprintf(stdout, "[Buffer] %s\n", buffer);
                 }
-                fprintf(stdout, "[Buffer] %s\n", buffer);
             }
         }
-
-        fprintf(stdout, "I'm in a loop\n");
     }
 }
 
@@ -71,8 +77,6 @@ void controller_stop()
 {
     alive = false;
     return;
-    int error = eventloop_add_event(epoll_fd, main_socket);
-    fprintf(stdout, "Added fd %d to eventloop %d. Status %d\n", main_socket, epoll_fd, error);
 }
 
 void controller_cleanup()
