@@ -48,9 +48,6 @@ void controller_run()
 
         for (loop = 0; loop < nr_of_fd; ++loop)
         {
-            fprintf(stdout, "[Events] events  = %d\n", events.events);
-            fprintf(stdout, "[Events] data.fd = %d\n", events.data.fd);
-
             if (events.data.fd == main_socket)
             {
                 new_socket = connection_accept_socket(main_socket);

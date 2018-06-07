@@ -1,6 +1,19 @@
-#include <stdio.h>
+#include <signal.h>
+#include <stdbool.h>
+
+#include "controller.h"
+
+void stop_program()
+{
+    controller_cleanup();
+    controller_stop();
+    return;
+}
 
 int main(void)
 {
-    return 0;
+    signal(SIGINT, stop_program);
+
+    controller_init();
+    controller_run();
 }
